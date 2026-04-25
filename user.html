@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 智承瓷韵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f9f3eb;
+            padding: 60px 20px;
+        }
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 45px 30px;
+            border-radius: 16px;
+        }
+        .welcome-title {
+            color: #965a20;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .avatar-wrap {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #965a20;
+            cursor: pointer;
+        }
+        .avatar-tip {
+            font-size: 14px;
+            color: #666;
+            margin-top: 12px;
+        }
+        #avatarInput { display: none; }
+
+        .menu-item {
+            background: #f9f3eb;
+            padding: 18px 22px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.25s;
+        }
+        .menu-item:hover {
+            background: #965a20;
+            color: #fff;
+        }
+        .logout-btn {
+            display:block;
+            width: fit-content;
+            margin: 50px auto 0;
+            padding: 12px 40px;
+            background: #ff3b30;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="welcome-title">欢迎：<span id="showUser"></span></h2>
+
+    <div class="avatar-wrap">
+        <img id="userAvatar" class="avatar" alt="头像">
+        <p class="avatar-tip">点击头像 → 从相册/本地选取图片更换</p>
+        <input type="file" id="avatarInput" accept="image/*">
+    </div>
+
+    <div class="menu-item" onclick="location.href='like.html'">❤️ 我的点赞记录</div>
+    <div class="menu-item" onclick="location.href='collect.html'">⭐ 我的收藏</div>
+    <div class="menu-item" onclick="location.href='history.html'">👁 浏览历史</div>
+    <div class="menu-item" onclick="location.href='create.html'">🎨 我的创作</div>
+    <div class="menu-item" onclick="location.href='draft.html'">📁 草稿箱</div>
+    <div class="menu-item" onclick="location.href='income.html'">💰 我的收益</div>
+
+    <button class="logout-btn" onclick="logout()">退出登录</button>
+</div>
+
+<script>
+// 全局用户数据管理
+const currentUser = localStorage.getItem("loginUser");
+if (!currentUser) {
+    alert("请先登录！");
+    location.href = "index.html";
+}
+document.getElementById("showUser").innerText = currentUser;
+
+// 头像功能
+const avatarImg = document.getElementById("userAvatar");
+const avatarInput = document.getElementById("avatarInput");
+
+function loadAvatar() {
+    const avatarKey = `avatar_${currentUser}`;
+    avatarImg.src = localStorage.getItem(avatarKey) || "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png";
+}
+avatarImg.onclick = () => avatarInput.click();
+avatarInput.onchange = e => {
+    const file = e.target.files[0];
+    if(!file || !file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        avatarImg.src = ev.target.result;
+        localStorage.setItem(`avatar_${currentUser}`, ev.target.result);
+        alert("头像更换成功！");
+    }
+    reader.readAsDataURL(file);
+}
+
+// 退出登录
+function logout(){
+    if(confirm("确定退出当前账号？")){
+        localStorage.removeItem("loginUser");
+        location.href = "index.html";
+    }
+}
+
+window.onload = loadAvatar;
+</script>
+</body>
+</html>
