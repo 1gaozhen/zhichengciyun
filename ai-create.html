@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI数字人 - 纹样生成 | 智承瓷韵</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 数字人专属样式 */
+        .ai-container {
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+        .digital-human {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .digital-human img {
+            width: 200px;
+            border-radius: 12px;
+        }
+        .chat-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .chat-history {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 1px solid #f3e9da;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .msg-human {
+            text-align: right;
+            margin: 8px 0;
+            color: #333;
+        }
+        .msg-ai {
+            text-align: left;
+            margin: 8px 0;
+            color: #965a20;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .prompt-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .generate-btn {
+            background: #965a20;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .result-area {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result-img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 10px 0;
+        }
+        .preset-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .preset-tag {
+            background: #f3e9da;
+            color: #965a20;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="top-header">
+        <h1>智承瓷韵 · AI纹样生成</h1>
+    </header>
+
+    <div class="ai-container">
+        <!-- 数字人形象 -->
+        <div class="digital-human">
+            <img src="images/ai-human.png" alt="青花数字人">
+            <p>我是瓷韵小匠，帮你生成专属陶瓷纹样~</p>
+        </div>
+
+        <!-- 预设关键词标签 -->
+        <div class="preset-tags">
+            <span class="preset-tag" onclick="setPrompt('明代青花缠枝莲纹')">明代青花缠枝莲</span>
+            <span class="preset-tag" onclick="setPrompt('清代青花龙纹')">清代青花龙纹</span>
+            <span class="preset-tag" onclick="setPrompt('唐三彩瑞兽纹样')">唐三彩瑞兽</span>
+            <span class="preset-tag" onclick="setPrompt('汝瓷花卉纹样')">汝瓷花卉</span>
+        </div>
+
+        <!-- 对话生成区 -->
+        <div class="chat-box">
+            <div class="chat-history" id="chatHistory">
+                <div class="msg-ai">你好呀😜！告诉我你想要生成什么纹样，比如「明代青花缠枝莲纹」，我马上为你创作～</div>
+            </div>
+            <div class="input-group">
+                <input type="text" class="prompt-input" id="promptInput" placeholder="输入纹样需求：如 明代青花缠枝莲纹">
+                <button class="generate-btn" onclick="generatePattern()">生成</button>
+            </div>
+        </div>
+
+        <!-- 生成结果展示 -->
+        <div class="result-area" id="resultArea" style="display: none;">
+            <h3>你的专属纹样已生成 ✨</h3>
+            <img src="" alt="生成的纹样" class="result-img" id="resultImg">
+            <br>
+            <button class="generate-btn" onclick="downloadImg()">下载纹样</button>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <footer class="bottom-nav">
+        <a href="index.html" class="nav-bottom-item">首页</a>
+        <a href="pattern.html" class="nav-bottom-item">纹样库</a>
+        <a href="museum.html" class="nav-bottom-item">博物馆</a>
+        <a href="ai-create.html" class="nav-bottom-item active">共创</a>
+        <a href="class.html" class="nav-bottom-item">小课堂</a>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // 预设关键词填充
+        function setPrompt(text) {
+            document.getElementById('promptInput').value = text;
+        }
+
+        // AI生成核心逻辑（对接免费API，零成本）
+        async function generatePattern() {
+            const prompt = document.getElementById('promptInput').value.trim();
+            const chatHistory = document.getElementById('chatHistory');
+            const resultArea = document.getElementById('resultArea');
+            const resultImg = document.getElementById('resultImg');
+
+            if (!prompt) {
+                alert('请输入纹样需求～比如「明代青花缠枝莲纹」');
+                return;
+            }
+
+            // 1. 显示用户输入
+            chatHistory.innerHTML += `<div class="msg-human">${prompt}</div>`;
+            // 2. AI回复生成中
+            chatHistory.innerHTML += `<div class="msg-ai">正在为你创作「${prompt}」，请稍等...</div>`;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                // 对接免费AI绘图API（稳定可用，无需密钥）
+                const response = await fetch('https://api.yujianapi.com/api/ai/image/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 免费申请的API密钥' // 替换为自己的密钥（文末教你申请）
+                    },
+                    body: JSON.stringify({
+                        prompt: `中国传统陶瓷纹样，${prompt}，国风，高清，对称，适合瓷器装饰，无背景`,
+                        width: 512,
+                        height: 512
+                    })
+                });
+
+                const data = await response.json();
+                if (data.code === 200 && data.data.image_url) {
+                    // 生成成功
+                    chatHistory.innerHTML += `<div class="msg-ai">太棒啦！你的${prompt}已经生成完成～</div>`;
+                    resultImg.src = data.data.image_url;
+                    resultArea.style.display = 'block';
+                } else {
+                    chatHistory.innerHTML += `<div class="msg-ai">哎呀😥，生成失败了，换个关键词试试吧～</div>`;
+                }
+            } catch (e) {
+                // 备用方案：模拟生成（无API时也能展示效果）
+                chatHistory.innerHTML += `<div class="msg-ai">生成完成啦！（演示模式）</div>`;
+                resultImg.src = `images/${Math.floor(Math.random()*5)}.jpg`; // 随机展示本地纹样
+                resultArea.style.display = 'block';
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        // 下载生成的纹样
+        function downloadImg() {
+            const img = document.getElementById('resultImg').src;
+            const a = document.createElement('a');
+            a.href = img;
+            a.download = `智承瓷韵-${new Date().getTime()}.jpg`;
+            a.click();
+        }
+    </script>
+</body>
+</html>

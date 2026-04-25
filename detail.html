@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹样详情</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei";}
+        body{background:#f9f3eb;max-width:1000px;margin:0 auto;padding:20px;}
+        .top-title{background:#965a20;color:white;text-align:center;padding:20px;border-radius:8px;font-size:28px;margin-bottom:20px;}
+        .main-img{width:100%;max-height:600px;object-fit:contain;background:white;border-radius:10px;margin:20px 0;}
+        .info-card{background:white;padding:20px;border-radius:10px;margin-bottom:20px;}
+        .info-card h2{margin-bottom:10px;color:#333;}
+        .dynasty{color:#965a20;font-weight:bold;margin:8px 0;}
+        .desc{line-height:1.8;color:#444;margin:15px 0;}
+        .stat-bar{display:flex;gap:30px;margin:15px 0;font-size:18px;align-items:center;}
+        .like-btn{cursor:pointer;padding:8px 16px;border:1px solid #965a20;border-radius:20px;display:flex;align-items:center;gap:5px;}
+        .like-btn.liked{background:red;color:white;border-color:red;}
+        .section-title{font-size:20px;margin:30px 0 15px;border-left:4px solid #965a20;padding-left:10px;color:#333;}
+        .comment-input-area{display:flex;gap:10px;margin:15px 0;}
+        #commentInput{flex:1;padding:10px;border:1px solid #ddd;border-radius:6px;}
+        #submitComment{background:#965a20;color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;}
+        
+        /* 留言样式 + 删除按钮 */
+        .comment-item{
+            background:#f3e9da;padding:12px;border-radius:6px;margin-bottom:10px;
+            display:flex;justify-content:space-between;align-items:center;
+        }
+        .comment-item span{font-size:12px;color:#777;}
+        .del-btn{
+            background:#ff4444;color:white;border:none;padding:4px 8px;border-radius:4px;
+            font-size:12px;cursor:pointer;
+        }
+        .back-list{display:block;width:fit-content;margin:40px auto;background:#965a20;color:white;padding:10px 30px;border-radius:20px;text-decoration:none;color:white;}
+    </style>
+</head>
+<body>
+    <div class="top-title">纹样详情介绍</div>
+
+    <img class="main-img" id="dMainImg" alt="纹样大图">
+
+    <div class="info-card">
+        <h2 id="dName"></h2>
+        <p class="dynasty" id="dDynasty"></p>
+        <p class="desc" id="dDesc"></p>
+        <div class="stat-bar">
+            <div class="like-btn" id="likeBtn">❤️ <span id="likeCount">0</span></div>
+            <div>👁 浏览量：<span id="viewCount">0</span></div>
+        </div>
+    </div>
+
+    <h3 class="section-title">用户留言区</h3>
+    <div class="comment-input-area">
+        <input type="text" id="commentInput" placeholder="分享你对这款纹样的看法...">
+        <button id="submitComment">提交留言</button>
+    </div>
+    <div id="commentList"></div>
+
+    <a href="pattern.html" class="back-list">← 返回纹样库</a>
+
+    <script src="main.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const patternId = urlParams.get('id');
+        if (!patternId || !patternData[patternId]) location.href = "pattern.html";
+
+        const data = patternData[patternId];
+        const stats = getPatternStats(patternId);
+
+        // 浏览量+1
+        stats.view++;
+        localStorage.setItem(`view_${patternId}`, stats.view);
+
+        document.getElementById('dName').innerText = data.name;
+        document.getElementById('dDynasty').innerText = `朝代：${data.dynasty}`;
+        document.getElementById('dDesc').innerText = data.desc;
+        document.getElementById('dMainImg').src = data.mainImg;
+        document.getElementById('likeCount').innerText = stats.like;
+        document.getElementById('viewCount').innerText = stats.view;
+
+        // 点赞
+        let isLiked = localStorage.getItem(`isLiked_${patternId}`) === "1";
+        const likeBtn = document.getElementById('likeBtn');
+        if (isLiked) likeBtn.classList.add('liked');
+
+        likeBtn.onclick = function () {
+            if (this.classList.contains('liked')) {
+                this.classList.remove('liked');
+                stats.like--;
+                localStorage.setItem(`isLiked_${patternId}`, "0");
+            } else {
+                this.classList.add('liked');
+                stats.like++;
+                localStorage.setItem(`isLiked_${patternId}`, "1");
+            }
+            localStorage.setItem(`like_${patternId}`, stats.like);
+            document.getElementById('likeCount').innerText = stats.like;
+        }
+
+        // 渲染留言（带删除）
+        function renderComment() {
+            const commentBox = document.getElementById('commentList');
+            commentBox.innerHTML = '';
+            stats.comment.forEach((msg, index) => {
+                let div = document.createElement('div');
+                div.className = "comment-item";
+                div.innerHTML = `
+                    <div>
+                        <span>${msg.time}</span>
+                        <p>${msg.content}</p>
+                    </div>
+                    <button class="del-btn" onclick="deleteComment(${index})">删除</button>
+                `;
+                commentBox.appendChild(div);
+            });
+        }
+
+        // 删除留言功能
+        function deleteComment(index) {
+            if (!confirm("确定要删除这条留言吗？")) return;
+            stats.comment.splice(index, 1);
+            localStorage.setItem(`comment_${patternId}`, JSON.stringify(stats.comment));
+            renderComment();
+        }
+
+        // 提交留言
+        document.getElementById('submitComment').onclick = function () {
+            let input = document.getElementById('commentInput');
+            let val = input.value.trim();
+            if (!val) { alert("请输入留言内容"); return; }
+            stats.comment.unshift({
+                content: val,
+                time: new Date().toLocaleString()
+            });
+            localStorage.setItem(`comment_${patternId}`, JSON.stringify(stats.comment));
+            input.value = '';
+            renderComment();
+        }
+
+        renderComment();
+    </script>
+</body>
+</html>
