@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智承瓷韵 - 传统陶瓷纹样数字艺术馆</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", "SimHei", sans-serif;
+        }
+        body {
+            background-color: #f9f3eb;
+            color: #333;
+            overflow-x: hidden;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .header {
+            background-color: #965a20;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header-nav a {
+            color: white;
+            margin-left: 20px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .ai-human-section {
+            padding: 40px 20px;
+            text-align: center;
+            background-color: white;
+            margin: 20px;
+            border-radius: 12px;
+        }
+        .ai-human-section h2 {
+            color: #965a20;
+            font-size: 26px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .ai-avatar-box {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+        }
+        .ai-avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: floatAvatar 3s ease-in-out infinite;
+        }
+        @keyframes floatAvatar {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+            100% { transform: translateY(0px); }
+        }
+        .ai-human-desc {
+            max-width: 800px;
+            margin: 0 auto 25px;
+            line-height: 1.8;
+            color: #555;
+        }
+        .banner-btn {
+            background-color: #965a20;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            display:inline-block;
+        }
+
+        .hot-recommend-section {
+            margin: 0 20px 40px;
+            padding: 25px;
+            background: #fff;
+            border-radius: 12px;
+        }
+        .section-main-title {
+            font-size: 22px;
+            color: #965a20;
+            margin-bottom: 20px;
+            padding-left: 8px;
+            border-left: 4px solid #965a20;
+        }
+        .scroll-wrap {
+            width: 100%;
+            overflow: hidden;
+        }
+        .scroll-list {
+            display: flex;
+            gap: 20px;
+            width: max-content;
+            animation: scrollLoop 25s linear infinite;
+        }
+        .scroll-wrap:hover .scroll-list {
+            animation-play-state: paused;
+        }
+        @keyframes scrollLoop {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .hot-pattern-card {
+            flex-shrink: 0;
+            width: 180px;
+            background: #f9f3eb;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor:pointer;
+        }
+        .hot-card-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #fff;
+        }
+        .hot-card-info {
+            padding: 10px;
+        }
+        .hot-card-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .hot-card-data {
+            font-size: 12px;
+            color: #777;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .function-section {
+            padding: 0 20px 40px;
+        }
+        .function-section h2 {
+            font-size: 24px;
+            color: #965a20;
+            margin-bottom: 25px;
+            padding-left: 8px;
+            border-left: 4px solid #965a20;
+        }
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .function-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .function-icon {
+            font-size: 45px;
+            color: #965a20;
+            margin-bottom: 12px;
+        }
+        .function-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .function-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .function-btn {
+            display: inline-block;
+            border: 1px solid #965a20;
+            color: #965a20;
+            padding: 7px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .page-footer {
+            background-color: #965a20;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            font-size: 14px;
+            margin-bottom:60px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 12px 0;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .nav-item.active {
+            color: #965a20;
+            font-weight: bold;
+        }
+        .nav-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .function-grid { grid-template-columns: 1fr; }
+            .hot-pattern-card { width: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-title">智承瓷韵</div>
+    <nav class="header-nav">
+        <a id="loginBtn" onclick="userLogin()">登录</a>
+        <a id="registerBtn" onclick="userRegister()">注册</a>
+        <a id="userCenterBtn" href="user.html" style="display:none;"></a>
+    </nav>
+</header>
+
+<section class="ai-human-section">
+    <h2>
+        瓷韵小匠 · AI数字人
+        <div class="ai-avatar-box">
+            <img src="images/ai-human.jpg" alt="瓷韵小匠">
+        </div>
+    </h2>
+    <p class="ai-human-desc">我是瓷韵小匠，你的专属陶瓷纹样创作助手！可以根据你的需求，生成独一无二的传统陶瓷纹样，快来和我一起创作吧～</p>
+    <a href="ai-create.html" class="banner-btn">立即生成专属纹样</a>
+</section>
+
+<section class="hot-recommend-section">
+    <h2 class="section-main-title">🔥 热门推荐 · 综合人气Top10</h2>
+    <div class="scroll-wrap">
+        <div class="scroll-list" id="hotScrollList"></div>
+    </div>
+</section>
+
+<section class="function-section">
+    <h2>核心功能</h2>
+    <div class="function-grid">
+        <div class="function-card">
+            <div class="function-icon">📚</div>
+            <h3 class="function-title">纹样宝库</h3>
+            <p class="function-desc">收录明清经典青花、唐三彩、汝瓷等纹样，支持分类、搜索，查看纹样详情与历史背景</p>
+            <a href="pattern.html" class="function-btn">进入纹样库</a>
+        </div>
+
+        <div class="function-card">
+            <div class="function-icon">💬</div>
+            <h3 class="function-title">纹样论坛</h3>
+            <p class="function-desc">用户自主上传分享原创纹样，互相点赞、浏览、评论交流，一起玩转传统陶瓷纹样创作</p>
+            <a href="forum.html" class="function-btn">进入论坛</a>
+        </div>
+
+        <div class="function-card">
+            <div class="function-icon">📖</div>
+            <h3 class="function-title">陶瓷小课堂</h3>
+            <p class="function-desc">了解陶瓷纹样的历史渊源、文化寓意、制作工艺，解锁传统陶瓷的趣味知识</p>
+            <a href="class.html" class="function-btn">走进课堂</a>
+        </div>
+        <div class="function-card">
+            <div class="function-icon">🏛️</div>
+            <h3 class="function-title">数字博物馆</h3>
+            <p class="function-desc">沉浸式浏览历代经典陶瓷器物，高清展示器物纹样细节，感受传统工艺之美</p>
+            <a href="museum.html" class="function-btn">参观博物馆</a>
+        </div>
+    </div>
+</section>
+
+<footer class="page-footer">
+    智承瓷韵 © 2025 版权所有 | 传承传统陶瓷纹样，创新数字艺术表达
+</footer>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>首页</span>
+    </a>
+    <a href="pattern.html" class="nav-item">
+        <span class="nav-icon">📚</span>
+        <span>纹样库</span>
+    </a>
+    <a href="forum.html" class="nav-item">
+        <span class="nav-icon">💬</span>
+        <span>纹样论坛</span>
+    </a>
+    <a href="museum.html" class="nav-item">
+        <span class="nav-icon">🏛️</span>
+        <span>博物馆</span>
+    </a>
+    <a href="class.html" class="nav-item">
+        <span class="nav-icon">📖</span>
+        <span>小课堂</span>
+    </a>
+</nav>
+
+<script>
+const patternData = [
+    {name:"青花菊花纹", img:"images/pattern_01_chrysanthemum.jpg", view:29, like:1},
+    {name:"青花繁复缠枝花纹", img:"images/pattern_02_complex.jpg", view:22, like:1},
+    {name:"青花龙纹纹样", img:"images/pattern_03_dragon.jpg", view:21, like:0},
+    {name:"青花缠枝大花纹", img:"images/pattern_04_flower.jpg", view:20, like:0},
+    {name:"青花福禄平安多子纹", img:"images/pattern_05_fu.jpg", view:20, like:0},
+    {name:"青花葡萄纹", img:"images/pattern_06_grape.jpg", view:1, like:0},
+    {name:"青花缠枝牡丹纹", img:"images/pattern_07_peony.jpg", view:0, like:0},
+    {name:"青花凤凰纹样", img:"images/pattern_08_phoenix.jpg", view:0, like:0},
+    {name:"青花折枝小花纹", img:"images/pattern_09_smallflower.jpg", view:0, like:0},
+    {name:"青花缠枝团花纹样", img:"images/pattern_10_tuanhua.jpg", view:0, like:0},
+];
+
+// ==============================================
+// ✅ 首页点赞功能（无弹窗 + 实时数字 + 同步个人中心）
+// ==============================================
+function toggleIndexLike(pid, el) {
+    const user = localStorage.getItem("loginUser");
+    if (!user) return;
+
+    let likeList = JSON.parse(localStorage.getItem(`USER_LIKE_${user}`)) || [];
+    const realId = parseInt(pid.replace("PAT_", ""));
+    
+    if (likeList.includes(pid)) {
+        likeList = likeList.filter(id => id !== pid);
+        patternData[realId].like = Math.max(0, patternData[realId].like - 1);
+    } else {
+        likeList.push(pid);
+        patternData[realId].like++;
+    }
+
+    localStorage.setItem(`USER_LIKE_${user}`, JSON.stringify(likeList));
+    el.innerText = "❤️ " + patternData[realId].like;
+}
+
+function getHot(item) {
+    return item.view + item.like * 3;
+}
+
+const hotList = [...patternData].sort((a,b)=>getHot(b)-getHot(a)).slice(0,10);
+const box = document.getElementById("hotScrollList");
+let html = "";
+hotList.forEach((item, idx) => {
+    let pid = "PAT_" + idx;
+    html += `
+    <div class="hot-pattern-card" onclick="location.href='detail.html?id=${idx}'">
+        <img src="${item.img}" class="hot-card-img" alt="${item.name}">
+        <div class="hot-card-info">
+            <div class="hot-card-name">${item.name}</div>
+            <div class="hot-card-data" onclick="event.stopPropagation()">
+                <span onclick="toggleIndexLike('${pid}',this)">❤️ ${item.like}</span>
+                👁 ${item.view}
+            </div>
+        </div>
+    </div>`;
+});
+box.innerHTML = html + html;
+
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const userCenterBtn = document.getElementById("userCenterBtn");
+
+function getAllUsers() {
+    return JSON.parse(localStorage.getItem("allUsers")) || [];
+}
+
+function initUser() {
+    return { like: [], collect: [], history: [], create: [], draft: [], money: 0 };
+}
+
+function refreshUI() {
+    const user = localStorage.getItem("loginUser");
+    if (user) {
+        loginBtn.style.display = "none";
+        registerBtn.style.display = "none";
+        userCenterBtn.style.display = "inline";
+        userCenterBtn.innerText = user;
+    } else {
+        loginBtn.style.display = "inline";
+        registerBtn.style.display = "inline";
+        userCenterBtn.style.display = "none";
+    }
+}
+
+function userRegister() {
+    const user = prompt("请输入用户名：");
+    const pwd = prompt("请输入密码：");
+    if (!user || !pwd) return;
+
+    const list = getAllUsers();
+    if (list.some(item => item.user === user)) {
+        alert("用户名已存在！");
+        return;
+    }
+
+    list.push({ user, pwd, data: initUser() });
+    localStorage.setItem("allUsers", JSON.stringify(list));
+    alert("注册成功！");
+}
+
+function userLogin() {
+    const user = prompt("请输入用户名：");
+    const pwd = prompt("请输入密码：");
+    if (!user || !pwd) return;
+
+    const list = getAllUsers();
+    const target = list.find(item => item.user === user && item.pwd === pwd);
+    if (!target) {
+        alert("账号或密码错误");
+        return;
+    }
+
+    localStorage.setItem("loginUser", user);
+    refreshUI();
+    alert("登录成功！已自动记住，下次打开无需重登");
+}
+
+window.onload = function() {
+    refreshUI();
+};
+</script>
+</body>
+</html>

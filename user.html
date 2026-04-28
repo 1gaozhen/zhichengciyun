@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 智承瓷韵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background: #f9f3eb;
+            padding: 40px 15px;
+        }
+        .user-card {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .welcome-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #965a20;
+            cursor: pointer;
+            object-fit: cover;
+        }
+        .avatar-tip {
+            font-size: 13px;
+            color: #888;
+            margin: 10px 0 30px;
+        }
+        .menu-item {
+            width: 100%;
+            background: #f9f3eb;
+            border: none;
+            padding: 16px;
+            margin: 8px 0;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .menu-item:hover {
+            background: #f0e4d2;
+            transform: translateX(3px);
+        }
+        .menu-item.active {
+            background: #965a20;
+            color: #fff;
+        }
+        .content-area {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            text-align: left;
+        }
+        .content-title {
+            color: #965a20;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .grid-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .item-card {
+            background: #f9f3eb;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .item-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .item-name {
+            padding: 8px;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .empty-tip {
+            text-align: center;
+            color: #999;
+            padding: 40px 10px;
+            line-height: 1.6;
+        }
+        .logout-btn {
+            margin-top: 40px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="user-card">
+    <h2 class="welcome-text" id="welcome">欢迎：游客</h2>
+    <img class="avatar" id="userAvatar" src="https://placehold.co/120?text=头像" alt="用户头像">
+    <p class="avatar-tip">点击头像 → 从本地选取图片更换</p>
+
+    <button class="menu-item" onclick="location.href='my-like.html'">❤️ 我的点赞记录</button>
+    <button class="menu-item" onclick="location.href='my-collect.html'">⭐ 我的收藏</button>
+    <button class="menu-item" onclick="location.href='my-history.html'">👁 浏览历史</button>
+    <button class="menu-item" onclick="location.href='my-create.html'">🎨 我的创作</button>
+    <button class="menu-item" onclick="location.href='my-draft.html'">📁 草稿箱</button>
+    <button class="menu-item" onclick="location.href='my-income.html'">💰 我的收益</button>
+
+    <div class="content-area">
+        <h3 class="content-title" id="contentTitle">个人中心</h3>
+        <div id="contentBox" class="empty-tip">请点击菜单查看内容</div>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">退出登录</button>
+</div>
+
+<script src="main.js"></script>
+<script>
+// 获取登录用户
+function getLoginUser() {
+    return localStorage.getItem("loginUser") || "";
+}
+
+// 点击更换头像
+document.getElementById('userAvatar').addEventListener('click', () => {
+    const user = getLoginUser();
+    if (!user) {
+        alert("请先登录！");
+        return;
+    }
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = e => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            localStorage.setItem(`avatar_${user}`, ev.target.result);
+            document.getElementById('userAvatar').src = ev.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    };
+    fileInput.click();
+});
+
+// 退出登录
+function logout() {
+    localStorage.removeItem("loginUser");
+    alert("已成功退出登录");
+    location.href = "index.html";
+}
+
+// 初始化页面
+window.onload = function () {
+    const user = getLoginUser();
+    const welcomeEl = document.getElementById('welcome');
+    const avatarEl = document.getElementById('userAvatar');
+
+    if (user) {
+        welcomeEl.innerText = `欢迎：${user}`;
+        const savedAvatar = localStorage.getItem(`avatar_${user}`);
+        if (savedAvatar) {
+            avatarEl.src = savedAvatar;
+        }
+    } else {
+        welcomeEl.innerText = "欢迎，请登录";
+    }
+};
+</script>
+</body>
+</html>

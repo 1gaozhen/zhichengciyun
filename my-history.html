@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的点赞记录</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",sans-serif;}
+        body{background:#f9f3eb;min-height:100vh;}
+        .header{
+            background:#965a20;color:white;padding:20px;border-radius:0 0 12px 12px;margin-bottom:30px;
+        }
+        .back-btn{
+            background:white;color:#965a20;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;margin-bottom:10px;
+        }
+        .container{max-width:1200px;margin:0 auto;padding:0 20px;}
+        .grid{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;
+        }
+        .card{
+            background:white;border-radius:10px;overflow:hidden;cursor:pointer;transition:0.2s;
+        }
+        .card:hover{transform:translateY(-4px);box-shadow:0 5px 12px rgba(0,0,0,0.08);}
+        .card img{width:100%;height:180px;object-fit:cover;}
+        .info{padding:12px;}
+        .name{font-weight:bold;font-size:15px;}
+        .empty{
+            text-align:center;color:#999;padding:120px 20px;font-size:16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <button class="back-btn" onclick="location.href='user.html'">← 返回个人中心</button>
+            <h2>❤️ 我的点赞记录</h2>
+        </div>
+    </div>
+    <div class="container">
+        <div class="grid" id="likeGrid"></div>
+        <p class="empty" id="emptyTip" style="display:none;">暂无点赞纹样<br>快去纹样宝库点赞喜欢的作品吧~</p>
+    </div>
+
+<!-- 引入全局纹样数据 -->
+<script src="main.js"></script>
+<script>
+// 登录校验
+const loginUser = localStorage.getItem("loginUser");
+if(!loginUser){
+    alert("请先登录！");
+    location.href = "index.html";
+}
+
+window.onload = renderLikes;
+
+function renderLikes(){
+    // 读取当前用户的点赞ID列表
+    const likeIds = JSON.parse(localStorage.getItem(`USER_LIKE_${loginUser}`)) || [];
+    const grid = document.getElementById("likeGrid");
+    const empty = document.getElementById("emptyTip");
+
+    // 无点赞
+    if(likeIds.length === 0){
+        grid.style.display = "none";
+        empty.style.display = "block";
+        return;
+    }
+
+    grid.style.display = "grid";
+    empty.style.display = "none";
+    let html = "";
+
+    // 匹配纹样数据 渲染列表
+    likeIds.forEach(pid=>{
+        const idx = parseInt(pid.replace("PAT_",""));
+        const item = patternData[idx];
+        if(!item) return;
+        html += `
+        <div class="card" onclick="location.href='detail.html?id=${idx}'">
+            <img src="${item.mainImg}" alt="${item.name}">
+            <div class="info">
+                <div class="name">${item.name}</div>
+            </div>
+        </div>
+        `
+    })
+    grid.innerHTML = html;
+}
+</script>
+</body>
+</html>
