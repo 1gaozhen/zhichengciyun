@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的浏览历史 - 智承瓷韵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", "SimHei", sans-serif;
+        }
+        body {
+            background-color: #f9f3eb;
+            color: #333;
+            padding-bottom: 70px;
+        }
+        .header {
+            background-color: #965a20;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .back-btn {
+            background: #fff;
+            color: #965a20;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .container {
+            padding: 20px;
+        }
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+        .history-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 15px;
+        }
+        .item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .item img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+        }
+        .info {
+            padding: 10px;
+        }
+        .name {
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .nav-item.active {
+            color: #965a20;
+            font-weight: bold;
+        }
+        .nav-icon {
+            font-size: 20px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="location.href='user.html'">← 返回</button>
+        <div class="header-title">我的浏览历史</div>
+    </div>
+
+    <div class="container">
+        <div id="historyList" class="history-list"></div>
+        <div id="emptyTip" style="display:none;" class="empty">暂无浏览记录</div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>首页
+        </a>
+        <a href="pattern.html" class="nav-item">
+            <span class="nav-icon">📚</span>纹样库
+        </a>
+        <a href="forum.html" class="nav-item">
+            <span class="nav-icon">💬</span>论坛
+        </a>
+        <a href="museum.html" class="nav-item">
+            <span class="nav-icon">🏛️</span>博物馆
+        </a>
+        <a href="class.html" class="nav-item">
+            <span class="nav-icon">📖</span>小课堂
+        </a>
+    </div>
+
+<script>
+window.onload = function(){
+    const user = localStorage.getItem("loginUser");
+    if(!user){
+        alert("请先登录");
+        location.href="index.html";
+        return;
+    }
+
+    // 读取浏览历史（核心！）
+    let history = JSON.parse(localStorage.getItem("browse_"+user)) || [];
+    let list = document.getElementById("historyList");
+    let empty = document.getElementById("emptyTip");
+
+    if(history.length === 0){
+        empty.style.display = "block";
+        return;
+    }
+
+    // 渲染浏览过的纹样
+    let html = "";
+    history.forEach(item => {
+        html += `
+        <div class="item" onclick="location.href='detail.html?id=${item.id}'">
+            <img src="${item.img}" alt="">
+            <div class="info">
+                <div class="name">${item.name}</div>
+                <div class="time">${item.time}</div>
+            </div>
+        </div>`;
+    });
+    list.innerHTML = html;
+}
+</script>
+
+</body>
+</html>

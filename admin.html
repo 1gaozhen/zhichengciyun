@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 数据总览</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
+        body{background:#f5f1eb;padding:20px;}
+        .wrap{max-width:1100px;margin:0 auto;}
+        h2{text-align:center;color:#b86d29;margin-bottom:30px;font-size:28px;}
+        .alert-no-admin{
+            text-align:center;color:red;font-size:20px;padding:50px 0;
+        }
+        /* 数据卡片布局 */
+        .data-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+            margin-bottom:40px;
+        }
+        .data-card{
+            background:#fff;
+            border-radius:12px;
+            padding:25px 20px;
+            display:flex;
+            align-items:center;
+            box-shadow:0 4px 12px rgba(184,109,41,0.08);
+            border:1px solid #f0e6d8;
+        }
+        .icon-box{
+            width:60px;height:60px;
+            border-radius:50%;
+            background:#f9f1e6;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin-right:15px;
+            font-size:26px;
+            color:#b86d29;
+        }
+        .data-info h4{
+            font-size:15px;color:#888;font-weight:normal;
+            margin-bottom:5px;
+        }
+        .data-info p{
+            font-size:26px;font-weight:bold;color:#333;
+        }
+        /* 列表面板 */
+        .panel{
+            background:#fff;
+            border-radius:12px;
+            padding:25px;
+            margin-bottom:20px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.05);
+        }
+        .panel h3{
+            color:#b86d29;margin-bottom:15px;padding-bottom:10px;
+            border-bottom:1px solid #eee;
+        }
+        table{width:100%;border-collapse:collapse;font-size:14px;}
+        th,td{padding:12px;border:1px solid #eee;text-align:center;}
+        th{background:#f9f1e6;color:#965a20;}
+        .del-btn{
+            padding:4px 10px;background:#e53935;color:#fff;
+            border:none;border-radius:4px;cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h2>智承瓷韵 管理员数据大盘</h2>
+        <div id="content"></div>
+    </div>
+
+<script src="main.js"></script>
+<script>
+window.onload = function(){
+    // 权限校验：仅 gaozhen 管理员
+    if(getLoginUser() !== "gaozhen"){
+        document.getElementById("content").innerHTML = 
+        `<div class="alert-no-admin">❌ 无权访问，仅管理员账号 gaozhen 可进入</div>`;
+        return;
+    }
+
+    // 统计数据
+    const userList = getAllUsers();
+    const msgList = getAllMessage();
+    const patternTotal = patternData.length;
+    const visitor = getVisitorData();
+
+    // 渲染顶部数据卡片 + 线性图标
+    document.getElementById("content").innerHTML = `
+    <div class="data-grid">
+        <div class="data-card">
+            <div class="icon-box">👥</div>
+            <div class="data-info">
+                <h4>注册总用户</h4>
+                <p>${userList.length}</p>
+            </div>
+        </div>
+        <div class="data-card">
+            <div class="icon-box">💬</div>
+            <div class="data-info">
+                <h4>全站留言总数</h4>
+                <p>${msgList.length}</p>
+            </div>
+        </div>
+        <div class="data-card">
+            <div class="icon-box">🏺</div>
+            <div class="data-info">
+                <h4>纹样总数量</h4>
+                <p>${patternTotal}</p>
+            </div>
+        </div>
+        <div class="data-card">
+            <div class="icon-box">📅</div>
+            <div class="data-info">
+                <h4>今日访客人数</h4>
+                <p>${visitor.today}</p>
+            </div>
+        </div>
+        <div class="data-card">
+            <div class="icon-box">🌐</div>
+            <div class="data-info">
+                <h4>全站累计访问</h4>
+                <p>${visitor.total}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 用户列表面板 -->
+    <div class="panel">
+        <h3>全部注册用户管理</h3>
+        <table>
+            <tr><th>用户名</th><th>操作</th></tr>
+            ${userList.map((item,idx)=>`
+            <tr>
+                <td>${item.user}</td>
+                <td>${item.user==='gaozhen'?'超级管理员':`<button class="del-btn" onclick="delUser(${idx})">删除</button>`}</td>
+            </tr>
+            `).join('')}
+        </table>
+    </div>
+
+    <!-- 纹样数据面板 -->
+    <div class="panel">
+        <h3>各纹样浏览点赞数据</h3>
+        <table>
+            <tr><th>纹样名称</th><th>浏览量</th><th>点赞量</th></tr>
+            ${patternData.map((item,idx)=>{
+                let s = getPatternStats(idx);
+                return `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${s.view}</td>
+                    <td>${s.like}</td>
+                </tr>
+                `;
+            }).join('')}
+        </table>
+    </div>
+
+    <!-- 留言管理面板 -->
+    <div class="panel">
+        <h3>全站留言管理</h3>
+        <table>
+            <tr><th>用户</th><th>留言内容</th><th>时间</th><th>操作</th></tr>
+            ${msgList.map((item,idx)=>`
+            <tr>
+                <td>${item.username}</td>
+                <td>${item.content}</td>
+                <td>${item.time}</td>
+                <td><button class="del-btn" onclick="delMessage(${idx})">删除</button></td>
+            </tr>
+            `).join('')}
+        </table>
+    </div>
+    `;
+}
+
+// 删除用户
+window.delUser = function(idx){
+    if(!confirm("确定删除该用户？"))return;
+    let users = getAllUsers();
+    users.splice(idx,1);
+    Storage.set("allUsers",users);
+    location.reload();
+}
+</script>
+</body>
+</html>
