@@ -1,0 +1,19 @@
+# 智承瓷韵 · 一键编排
+# 使用：docker compose up -d --build
+# 访问：http://<服务器IP>:8123/
+services:
+  ciyun:
+    build: .
+    image: ciyun:latest
+    container_name: ciyun
+    ports:
+      - "8123:8123"
+    environment:
+      - SILICONFLOW_API_KEY=${SILICONFLOW_API_KEY:-sk-your-api-key-here}
+      - SF_BASE_URL=${SF_BASE_URL:-https://api.siliconflow.cn}
+      - SF_MODEL=${SF_MODEL:-Kwai-Kolors/Kolors}
+      - PORT=8123
+    # 纹样图片资源随镜像内置；若需频繁更新图片，可挂载宿主机目录覆盖：
+    # volumes:
+    #   - ./纹样wy:/app/纹样wy
+    restart: unless-stopped

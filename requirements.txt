@@ -1,0 +1,6 @@
+# 智承瓷韵 · 后端依赖
+# Python 3.8+ 即可运行，server.py 仅使用标准库（http.server / urllib），无需第三方包
+#
+# 生产环境若需更高并发，可选用下方任一 WSGI 服务器（需同时改造 server.py 为 WSGI app）：
+# gunicorn==21.2.0      # Linux/macOS 生产级 WSGI
+# waitress==2.1.2       # 跨平台（含 Windows）纯 Python WSGI

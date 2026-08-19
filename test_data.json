@@ -1,0 +1,153 @@
+{
+  "patterns": [
+    {
+      "name": "青花菊花纹",
+      "category": "经典纹样",
+      "subcategory": "花卉纹",
+      "motif": "菊花",
+      "path": "纹样wy/images/pattern_01_chrysanthemum.jpg",
+      "idx_in_all": 0
+    },
+    {
+      "name": "青花繁复缠枝花纹",
+      "category": "经典纹样",
+      "subcategory": "缠枝纹",
+      "motif": "缠枝莲",
+      "path": "纹样wy/images/pattern_02_complex.jpg",
+      "idx_in_all": 1
+    },
+    {
+      "name": "云凤纹",
+      "category": "云纹类",
+      "subcategory": "龙凤瑞兽",
+      "motif": "凤纹",
+      "path": "纹样wy/云纹/云凤纹 (2).png",
+      "idx_in_all": 17
+    },
+    {
+      "name": "云凤纹（二）",
+      "category": "云纹类",
+      "subcategory": "龙凤瑞兽",
+      "motif": "凤纹",
+      "path": "纹样wy/云纹/云凤纹 (3).png",
+      "idx_in_all": 18
+    },
+    {
+      "name": "兽面纹",
+      "category": "动物瑞兽类",
+      "subcategory": "龙凤瑞兽",
+      "motif": "麒麟",
+      "path": "纹样wy/动物/兽面纹 (2).png",
+      "idx_in_all": 33
+    },
+    {
+      "name": "兽面纹（二）",
+      "category": "动物瑞兽类",
+      "subcategory": "龙凤瑞兽",
+      "motif": "麒麟",
+      "path": "纹样wy/动物/兽面纹.png",
+      "idx_in_all": 34
+    },
+    {
+      "name": "八吉祥纹",
+      "category": "吉祥寓意图",
+      "subcategory": "吉语文字",
+      "motif": "吉语字",
+      "path": "纹样wy/吉祥/pattern (2)Eight Auspicious Symbols.png",
+      "idx_in_all": 111
+    },
+    {
+      "name": "八吉祥纹（二）",
+      "category": "吉祥寓意图",
+      "subcategory": "吉语文字",
+      "motif": "吉语字",
+      "path": "纹样wy/吉祥/pattern (3)Eight Auspicious Symbols.png",
+      "idx_in_all": 112
+    },
+    {
+      "name": "凤穿牡丹缠枝纹",
+      "category": "缠枝花卉类",
+      "subcategory": "缠枝纹",
+      "motif": "缠枝莲",
+      "path": "纹样wy/缠枝纹/凤穿牡丹缠枝纹.png",
+      "idx_in_all": 129
+    },
+    {
+      "name": "双凤缠枝纹",
+      "category": "缠枝花卉类",
+      "subcategory": "缠枝纹",
+      "motif": "缠枝莲",
+      "path": "纹样wy/缠枝纹/双凤缠枝纹.png",
+      "idx_in_all": 130
+    },
+    {
+      "name": "宝相花纹",
+      "category": "花卉类",
+      "subcategory": "团花宝相",
+      "motif": "牡丹",
+      "path": "纹样wy/花卉/pattern_Bao Xiang Flower (10).png",
+      "idx_in_all": 177
+    },
+    {
+      "name": "宝相花纹（二）",
+      "category": "花卉类",
+      "subcategory": "团花宝相",
+      "motif": "牡丹",
+      "path": "纹样wy/花卉/pattern_Bao Xiang Flower (11).png",
+      "idx_in_all": 178
+    },
+    {
+      "name": "三多纹",
+      "category": "青花综合",
+      "subcategory": "瓜果纹",
+      "motif": "缠枝莲",
+      "path": "纹样wy/青花/三多纹.png",
+      "idx_in_all": 311
+    },
+    {
+      "name": "人物鱼藻纹",
+      "category": "青花综合",
+      "subcategory": "人物故事",
+      "motif": "人物",
+      "path": "纹样wy/青花/人物鱼藻纹.png",
+      "idx_in_all": 312
+    },
+    {
+      "name": "黑鲸纹样·110",
+      "category": "黑鲸素材",
+      "subcategory": "其他纹样",
+      "motif": "缠枝莲",
+      "path": "纹样wy/黑鲸/黑鲸素材 (110).png",
+      "idx_in_all": 334
+    },
+    {
+      "name": "黑鲸纹样·111",
+      "category": "黑鲸素材",
+      "subcategory": "其他纹样",
+      "motif": "缠枝莲",
+      "path": "纹样wy/黑鲸/黑鲸素材 (111).png",
+      "idx_in_all": 335
+    }
+  ],
+  "vessels": [
+    "方幅",
+    "花瓶",
+    "茶具",
+    "瓷盘",
+    "瓷砖",
+    "装饰画"
+  ],
+  "note": "覆盖所有分类的代表纹样，用于验证纹样贴合所有模具表面",
+  "categories": [
+    "经典纹样",
+    "云纹类",
+    "动物瑞兽类",
+    "吉祥寓意图",
+    "缠枝花卉类",
+    "花卉类",
+    "青花综合",
+    "黑鲸素材"
+  ],
+  "category_count": 8,
+  "pattern_count": 16
+}
